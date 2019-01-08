@@ -6,6 +6,6 @@ class MovieRepository{
 
   Future<MoviesContainer> fetchPopMovies() => movieApiProvider.fetchPopMoviesAPI();
 
-  Future<MoviesContainer> fetchGenreMovies(bool adult, String genre) => movieApiProvider.fetchMoviesByGenreAPI(adult, genre);
+  Future<MoviesContainer> fetchGenreMovies(bool adult, String genre, int page) => movieApiProvider.fetchMoviesByGenreAPI(adult, genre, page);
 
 }

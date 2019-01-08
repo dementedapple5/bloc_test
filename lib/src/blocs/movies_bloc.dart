@@ -9,12 +9,10 @@ class MoviesBloc{
 
   Observable<List<MoviesContainer>> get allMovies => _moviesFetcher.stream;
 
-  fetchAllMovies(List<String> genres) async {
-    for (String genre in genres){
-      MoviesContainer movieContainer = await _repository.fetchGenreMovies(true, genre);
-      moviesContainer.add(movieContainer);
-      _moviesFetcher.sink.add(moviesContainer);
-    }
+  fetchGenreMovies(String genre, int page) async {
+    MoviesContainer movieContainer = await _repository.fetchGenreMovies(true, genre, page);
+    moviesContainer.add(movieContainer);
+    _moviesFetcher.sink.add(moviesContainer);
   }
 
   dispose(){

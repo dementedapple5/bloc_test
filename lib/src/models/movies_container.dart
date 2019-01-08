@@ -2,14 +2,15 @@ import 'package:bloc_test/src/models/movie.dart';
 
 class MoviesContainer{
   int _page;
-  int _total_pages;
-  int _total_results;
+  int _totalPages;
+  int _totalResults;
+  String genre;
   List<Movie> _movies = [];
 
   MoviesContainer.fromJson(Map<String, dynamic> parsedJson){
     _page = parsedJson["page"];
-    _total_pages = parsedJson["total_pages"];
-    _total_results = parsedJson["total_results"];
+    _totalPages = parsedJson["total_pages"];
+    _totalResults = parsedJson["total_results"];
     List<Movie> moviesTemp = [];
     for (int i = 0; i < parsedJson["results"].length; i++){
       moviesTemp.add(Movie(parsedJson["results"][i]));
@@ -17,11 +18,13 @@ class MoviesContainer{
     _movies = moviesTemp;
   }
 
+
+
   List<Movie> get movies => _movies;
 
-  int get total_results => _total_results;
+  int get totalResults => _totalResults;
 
-  int get total_pages => _total_pages;
+  int get totalPages => _totalPages;
 
   int get page => _page;
 

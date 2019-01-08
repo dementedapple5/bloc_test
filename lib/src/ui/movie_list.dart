@@ -12,20 +12,25 @@ class MovieList extends StatefulWidget {
 
 class MovieListState extends State<MovieList> {
 
-  ScrollController _controller = ScrollController();
+
+  final ScrollController _controller = ScrollController();
 
   final genres = ["28", "14", "12"];
+
+  final Map<String, int> genrePageMap = {"28" : 1, "14" : 1, "12" : 1};
 
   @override
   void initState() {
     super.initState();
-    //_controller.addListener(refreshMovies);
-    bloc.fetchAllMovies(genres);
+
+    for (String genre in genrePageMap.keys) {
+      bloc.fetchGenreMovies(genre, genrePageMap[genre]);
+    }
+
   }
   @override
   void dispose() {
     bloc.dispose();
-    //_controller.removeListener(refreshMovies);
     _controller.dispose();
     super.dispose();
   }
@@ -39,19 +44,11 @@ class MovieListState extends State<MovieList> {
           stream: bloc.allMovies,
           builder: (context, AsyncSnapshot<List<MoviesContainer>> snapshot) {
             if (snapshot.hasData) {
-              List<Movie> movies = List();
-              for (MoviesContainer mc in snapshot.data) {
-                for (Movie mv in mc.movies){
-                  movies.add(mv);
-                }
-              }
               return ListView.builder(
-
-                controller: _controller,
-                itemCount: movies.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _MovieItem(movies[index]);
-                },
+                itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return _MovieShelf(snapshot.data[index], _controller);
+                  }
               );
             }
             else if (snapshot.hasError) {
@@ -63,14 +60,6 @@ class MovieListState extends State<MovieList> {
     );
   }
 
-/*
-  void refreshMovies() {
-
-    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
-      currentPage++;
-      bloc.fetchAllMovies();
-    }
-  }*/
 
   Widget _buildBottomAppBar() {
     return BottomNavigationBar(
@@ -87,18 +76,26 @@ class MovieListState extends State<MovieList> {
 
 class _MovieShelf extends StatelessWidget {
 
-  MoviesContainer mc;
+  final MoviesContainer mc;
+  final ScrollController controller;
 
-  _MovieShelf(this.mc);
+  _MovieShelf(this.mc, this.controller);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-        itemCount: mc.movies.length,
-        itemBuilder: (context, index){
-          return _MovieItem(mc.movies[index]);
-        }
+    return Container(
+      width: double.infinity,
+      height: 250.0,
+      alignment: Alignment.center,
+      child: ListView.builder(
+        controller: controller,
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: mc.movies.length,
+          itemBuilder: (context, index){
+            return _MovieItem(mc.movies[index]);
+          }
+      ),
     );
   }
 }
@@ -113,32 +110,15 @@ class _MovieItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-              child: Image.network('https://image.tmdb.org/t/p/w185${_movie.posterPath}')
-          ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(_movie.title, style: Theme.of(context).textTheme.display1, maxLines: 2),
-                  Text(_movie.overview, style: Theme.of(context).textTheme.display2, maxLines: 4),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+      width: 150.0,
+        margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.network('https://image.tmdb.org/t/p/w185${_movie.posterPath}', height: 180.0),
+            Text(_movie.title, style: Theme.of(context).textTheme.display2, maxLines: 2, softWrap: true)
+          ],
+      )
     );
   }
 }

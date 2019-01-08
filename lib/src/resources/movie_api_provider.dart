@@ -20,14 +20,14 @@ class MovieApiProvider{
     }
   }
 
-  Future<MoviesContainer> fetchMoviesByGenreAPI(bool adult, String genre) async{
-    final response = await client.get("https://api.themoviedb.org/3/discover/movie?api_key=3$_apiKey&sort_by=popularity.desc&include_adult=${adult.toString()}&include_video=false&page=1&with_genres=$genre");
+  Future<MoviesContainer> fetchMoviesByGenreAPI(bool adult, String genre, int page) async{
+    final response = await client.get("https://api.themoviedb.org/3/discover/movie?api_key=$_apiKey&sort_by=popularity.desc&include_adult=${adult.toString()}&include_video=false&page=$page&with_genres=$genre");
 
     if (response.statusCode == 200) {
       return MoviesContainer.fromJson(jsonDecode(response.body));
     }
     else {
-      throw Exception('Failed to load movies');
+      throw Exception('Failed to load movies ${response.statusCode}');
     }
   }
 
