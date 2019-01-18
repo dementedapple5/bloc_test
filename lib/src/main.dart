@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: TextTheme(
           display1: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.black87),
+          display3: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w600, color: Colors.blue),
           display2: TextStyle(fontSize: 16.0, color: Colors.grey[600])
         ),
         primarySwatch: Colors.blue,
