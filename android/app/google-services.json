@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "925306721899",
+    "firebase_url": "https://fms-app-1787f.firebaseio.com",
+    "project_id": "fms-app-1787f",
+    "storage_bucket": "fms-app-1787f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:925306721899:android:554a3e731d8b1318",
+        "android_client_info": {
+          "package_name": "com.example.flutterappbloc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "925306721899-3miu1tuf4vv30d04r7o9034edt3dmg6d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNY8Hu1DdgGwogsTUwjIm6EA5FvGCjQAI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
