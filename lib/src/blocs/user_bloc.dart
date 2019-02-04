@@ -26,15 +26,26 @@ class UserBloc implements BaseBloc{
 
   UserBloc(){
     _eventController.stream.listen(onUserEvent);
+
   }
 
 
   void onUserEvent(UserEvent event) async {
     if (event is LoginEvent) {
-      _fbUser = await _userRepository.login(event.username, event.password);
+      _fbUser = await _userRepository.login(_emailController.value, _passwordController.value);
+      if (_fbUser == null) {
+        _passwordController.addError("Wrong email or password");
+        _emailController.addError("Wrong email or password");
+      }
     }
     else if (event is SignUpEvent) {
-     _fbUser = await _userRepository.signUp(event.username, event.password);
+     _fbUser = await _userRepository.signUp(_emailController.value, _passwordController.value);
+
+     if (_fbUser == null) {
+       _passwordController.addError("The password must have at least 6 characters");
+       _emailController.addError("The email is not valid");
+     }
+
     }
   }
 
