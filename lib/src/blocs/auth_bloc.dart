@@ -5,11 +5,12 @@ import 'package:bloc_test/src/resources/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
-class UserBloc implements BaseBloc{
+class AuthBloc implements BaseBloc{
 
   final _emailController = BehaviorSubject<String>();
   final _passwordController = BehaviorSubject<String>();
   final _eventController = BehaviorSubject<UserEvent>();
+  final _fbUserController = BehaviorSubject<FirebaseUser>();
   final _userRepository = UserRepository();
 
   FirebaseUser _fbUser;
@@ -20,31 +21,37 @@ class UserBloc implements BaseBloc{
   Stream<String> get emailOut => _emailController.stream;
   Stream<String> get passwordOut => _passwordController.stream;
 
+  Stream<FirebaseUser> get fbUserStream => _fbUserController.stream;
+  Sink<FirebaseUser> get fbUserSink => _fbUserController.sink;
+
   FirebaseUser get fbUser => _fbUser;
   
   Sink<UserEvent> get onSubmit => _eventController.sink;
 
-  UserBloc(){
+  AuthBloc(){
     _eventController.stream.listen(onUserEvent);
-
   }
 
 
   void onUserEvent(UserEvent event) async {
+
     if (event is LoginEvent) {
-      _fbUser = await _userRepository.login(_emailController.value, _passwordController.value);
-      if (_fbUser == null) {
-        _passwordController.addError("Wrong email or password");
-        _emailController.addError("Wrong email or password");
+      try {
+        fbUserSink.add(await _userRepository.login(_emailController.value, _passwordController.value));
+
+      }catch (e) {
+        _passwordController.addError(e);
+        _emailController.addError(e);
       }
     }
     else if (event is SignUpEvent) {
-     _fbUser = await _userRepository.signUp(_emailController.value, _passwordController.value);
 
-     if (_fbUser == null) {
-       _passwordController.addError("The password must have at least 6 characters");
-       _emailController.addError("The email is not valid");
-     }
+      try {
+        fbUserSink.add(await _userRepository.signUp(_emailController.value, _passwordController.value));
+      }catch(e){
+        _passwordController.addError("The password must have at least 6 characters");
+        _emailController.addError("The email is not valid");
+      }
 
     }
   }
@@ -54,9 +61,10 @@ class UserBloc implements BaseBloc{
     _emailController.close();
     _passwordController.close();
     _eventController.close();
+    _fbUserController.close();
   }
 
 
 }
 
-final userBloc = UserBloc();
+final authBloc = AuthBloc();

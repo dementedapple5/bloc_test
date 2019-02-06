@@ -1,5 +1,6 @@
-import 'package:bloc_test/src/ui/login_page.dart';
-import 'package:bloc_test/src/ui/signup_page.dart';
+import 'package:bloc_test/src/ui/auth_page.dart';
+import 'package:bloc_test/src/utils/measures_const.dart';
+import 'package:bloc_test/src/utils/text_const.dart';
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -12,26 +13,32 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            FlatButton(
-              child: Text("LOGIN"),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginPage(), fullscreenDialog: true));
-              },
+            Expanded(
+              child: FlatButton(
+                child: Text(login_text.toUpperCase(), style: Theme.of(context).textTheme.display1),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AuthPage(true), fullscreenDialog: true));
+                },
+              )
             ),
-            FlatButton(
-              child: Text("SIGN UP"),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignUpPage(), fullscreenDialog: true));
-              },
-            ),
+            Expanded(
+              child: FlatButton(
+                color: Theme.of(context).primaryColor,
+                child: Text(sign_up_text.toUpperCase(),  style: Theme.of(context).textTheme.button),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AuthPage(false), fullscreenDialog: true));
+                },
+              )
+            )
           ],
         ),
       ),
     );
   }
+
+
 }
